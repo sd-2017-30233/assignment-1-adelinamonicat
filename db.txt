@@ -1,0 +1,77 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+CREATE SCHEMA IF NOT EXISTS `psT1` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `psT1` ;
+
+-- -----------------------------------------------------
+-- Table `psT1`.`employee`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `psT1`.`employee` (
+  `idemployee` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `password` VARCHAR(45) NULL,
+  PRIMARY KEY (`idemployee`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `psT1`.`client`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `psT1`.`client` (
+  `idclient` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `id_card` VARCHAR(45) NULL,
+  `cnp` VARCHAR(45) NULL,
+  `adress` VARCHAR(45) NULL,
+  PRIMARY KEY (`idclient`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `psT1`.`operations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `psT1`.`operations` (
+  `idoperations` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NULL,
+  `employee_idemployee1` INT NOT NULL,
+  PRIMARY KEY (`idoperations`),
+  INDEX `fk_operations_employee_idx` (`employee_idemployee1` ASC),
+  CONSTRAINT `fk_operations_employee`
+    FOREIGN KEY (`employee_idemployee1`)
+    REFERENCES `psT1`.`employee` (`idemployee`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `psT1`.`account`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `psT1`.`account` (
+  `idaccount` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NULL,
+  `amount` VARCHAR(45) NULL,
+  `date` VARCHAR(45) NULL,
+  `client_idclient` INT NOT NULL,
+  `operations_idoperations` INT NOT NULL,
+  PRIMARY KEY (`idaccount`),
+  INDEX `fk_account_client1_idx` (`client_idclient` ASC),
+  INDEX `fk_account_operations1_idx` (`operations_idoperations` ASC),
+  CONSTRAINT `fk_account_client1`
+    FOREIGN KEY (`client_idclient`)
+    REFERENCES `psT1`.`client` (`idclient`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_account_operations1`
+    FOREIGN KEY (`operations_idoperations`)
+    REFERENCES `psT1`.`operations` (`idoperations`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
